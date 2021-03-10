@@ -4,14 +4,14 @@ import { StyleSheet, TextInput, Button, Text, Alert, Image, View } from 'react-n
 
 import Search from './components/search'
 import Main from './components/main'
-// import ViewExercise from './components/viewExercise'
-import ViewExercise from './components/viewExercise-working'
+import ViewExercise from './components/viewExercise'
+//import ViewExercise from './components/viewExercise-working'
 export default function App() {
 
   return (
     <View>
 
-      <ViewExercise exerciseid='129' />
+      <ViewExercise exerciseid='192' />
     </View >
   );
 

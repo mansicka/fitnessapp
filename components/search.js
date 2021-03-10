@@ -56,7 +56,7 @@ const Search = () => {
                         }
                         } >
                             <View style={styles.cardContainer} key={i} >
-                                <ImageLoad key={id} source={{ uri: 'https://wger.de/' + exerciseDetail.data.image }} style={styles.image}
+                                <ImageLoad key={i} source={{ uri: 'https://wger.de/' + exerciseDetail.data.image }} style={styles.image}
                                     placeholderSource={require('../img/no_image.jpg')} />
                                 <View style={styles.content}>
                                     <Text style={styles.title}>{exerciseDetail.data.name}</Text>

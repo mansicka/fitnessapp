@@ -14,8 +14,9 @@ const ViewExercise = (exerciseid) => {
             const response = await fetch('https://wger.de/api/v2/exerciseinfo/' +
                 id + '/?format=json');
             const json = await response.json();
-            console.log(JSON.stringify(response.json))
+            console.log('set results')
             setResults(json);
+            console.log(results)
         }
         catch (error) {
             console.log(error);
@@ -23,34 +24,56 @@ const ViewExercise = (exerciseid) => {
 
         }
     }
+    //a function to clean up description string of html
+    const cleanString = (string) => {
+        const regex = /(<([^>]+)>)/ig;
+        const result = string.replace(regex, '');
+        return (result)
+    }
 
     useEffect(() => {
         getExerciseData(exerciseid);
     }, [])
 
     return (
-        <View>
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}>{results.name}</Text>
-            </View>
-            <View style={styles.muscleContainer}>
-                <Text>Affected muscle: {results.muscles[0].name}</Text>
-            </View>
+        <ScrollView>
+            <View>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>{results.name}</Text>
+                </View>
+                <View style={styles.divider} />
 
-            <View style={styles.imgContainer}>
-                {results.images.map((uri, i) => {
+                <View style={styles.subtContainer}><Text style={styles.subTitle}>Category</Text>
+                    <Text>&#9679; {results.category.name}</Text>
+                </View>
+                <View style={styles.textContainer}>
+                    <Text>&#9679;Affected muscle: {results.muscles[0].name}</Text></View>
+                <View style={styles.subtContainer}>
+                    <Text style={styles.subTitle}>Description:</Text></View>
+                <View style={styles.textContainer}>
+                    <Text>{cleanString(results.description)}</Text>
+                    <Text style={styles.noteTitle}>Notes: </Text>
+                    <Text>{results.comments[0].comment}</Text>
+                </View>
+                <View style={styles.subtContainer}>
+                    <Text style={styles.subTitle}>Images</Text></View>
+                <View style={styles.imgContainer}>
 
-                    return (
-                        <Image resizeMode='contain' style={styles.image}
-                            key={i} source={{ uri: uri.image }} />
-                    )
+                    {results.images.map((uri, i) => {
 
-                })
-                }
+                        return (
+                            <ImageLoad resizeMode='contain' style={styles.image}
+                                key={i} source={{ uri: uri.image }} placeholderSource={require('../img/no_image.jpg')} />
+                        )
 
-            </View>
-        </View >
+                    })
+                    }
 
+                </View>
+
+
+            </View >
+        </ScrollView>
     );
 
 };
@@ -63,18 +86,18 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     imgContainer: {
-        marginTop: 20,
-        height: 300,
+        marginTop: 10,
+        height: 400,
         width: '100%',
         flexDirection: 'row',
         padding: 5,
 
     },
-    muscleContainer: {
-        marginTop: 5,
-        height: 40,
+    textContainer: {
+        marginTop: 1,
+        height: 'auto',
         width: '100%',
-        flexDirection: 'row',
+        flexDirection: 'column',
         padding: 10,
     },
     titleContainer: {
@@ -90,15 +113,38 @@ const styles = StyleSheet.create({
         flex: 0.35
 
     },
+    subtContainer: {
+        marginTop: 20,
+        marginBottom: 5,
+        height: 'auto',
+        width: '100%',
+        flexDirection: 'column',
+        padding: 5,
+    },
+    divider: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        width: '50%',
+    },
     content: {
         flex: 0.65,
         paddingHorizontal: 5,
     },
     title: {
-        fontSize: 24,
+        fontSize: 34,
         fontWeight: 'bold',
         marginBottom: 5,
         textAlign: 'center'
+    },
+    subTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'left'
+    },
+    noteTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     input: {
         borderColor: 'grey',

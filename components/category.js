@@ -1,92 +1,81 @@
+
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Button, Text, Alert, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import ImageLoad from 'react-native-image-placeholder';
+import GetImagesById from './util/getImages'
 
-const url = 'https://wger.de/api/v2/exercise/search/?format=json&term=';
+const Category = (categoryid) => {
+    const id = categoryid.categoryid.toString()
+    const url = 'https://wger.de/api/v2/exercise/?format=json&language=2&category=';
+    const [exercises, setExercises] = useState([])
 
-const Search = () => {
-    const [results, setResults] = useState([]);
-    const [searchterm, setSearchterm] = useState('');
+    const getExercisesFromCategory = async () => {
+
+        try {
+            const response = await fetch(url + id);
+            const json = await response.json();
+            setExercises(json.results);
 
 
-    //get search results from wger
-    const Submit = async () => {
-        console.log(searchterm)
-        if (searchterm.length > 0) {
-            try {
-                const response = await fetch(url + searchterm);
-                const json = await response.json();
-                setResults(json.suggestions);
-                console.log(results);
-
-            }
-            catch (error) {
-                console.log(error);
-
-            }
         }
-        else {
-            alert('Please input a search term!')
-            setResults([]);
+        catch (error) {
+            console.log(error);
+
         }
+
     }
 
 
-
-
-
-
-    //return content
+    useEffect(() => {
+        console.log('category.js- load exercises')
+        getExercisesFromCategory(categoryid);
+    }, [])
     return (
-
-        <View>
+        <ScrollView>
             <View style={styles.titleContainer}>
-                <Text style={styles.title}>Search</Text>
+                <Text style={styles.title}>Exercises</Text>
             </View>
             <View style={styles.divider} />
-            <TextInput style={styles.input}
-                onChangeText={searchterm => setSearchterm(searchterm)} value={searchterm} placeholder='Search for an exercise...' />
-            <TouchableOpacity onPress={Submit}>
-                <View style={styles.buttonView}>
-                    <Text style={styles.buttonText}>SEARCH</Text>
-                </View>
-            </TouchableOpacity>
+            {exercises ?
 
-            {/* map exercise data if array is not empty */}
-            <ScrollView >
-                {results.map((exerciseDetail, i) => {
+                exercises.map((exercise, i) => {
+
+
                     return (
                         <TouchableOpacity key={i} onPress={() => {
                             console.log('Press');
+
                         }
                         } >
                             <View style={styles.cardContainer} key={i} >
-                                <ImageLoad key={i} source={{ uri: 'https://wger.de/' + exerciseDetail.data.image }} style={styles.image}
-                                    placeholderSource={require('../img/no_image.jpg')} />
+                                {/* <GetImagesById id={exercise.id} /> */}
                                 <View style={styles.content}>
-                                    <Text style={styles.title}>{exerciseDetail.data.name}</Text>
-                                    <Text>
-                                        Category: {exerciseDetail.data.category}
-                                    </Text>
+                                    <Text style={styles.subTitle}>{exercise.name}</Text>
                                 </View>
                             </View>
                         </TouchableOpacity>
 
+
                     )
                 })
-                }
-            </ScrollView>
-        </View>
+                : <Text>Loading.. </Text>}
+
+
+
+        </ScrollView>
+
+
+
     );
 
+
+
 }
-
-
 const styles = StyleSheet.create({
     cardContainer: {
         marginTop: 40,
-        height: 140,
+        height: 100,
         width: '100%',
         flexDirection: 'row',
         padding: 5,
@@ -119,14 +108,6 @@ const styles = StyleSheet.create({
         flex: 0.35
 
     },
-    buttonView: {
-        margintop: 10,
-        marginBottom: 5,
-        heigth: 5,
-        alignItems: 'center',
-        backgroundColor: '#D1D1D1'
-
-    },
     subtContainer: {
         marginTop: 20,
         marginBottom: 5,
@@ -156,14 +137,6 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         textAlign: 'left'
     },
-    buttonText: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginBottom: 5,
-        marginTop: 5,
-        backgroundColor: '#D1D1D1'
-    },
-
     noteTitle: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -188,4 +161,5 @@ const styles = StyleSheet.create({
     },
 
 })
-export default Search;
+
+export default Category;

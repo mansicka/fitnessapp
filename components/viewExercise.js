@@ -14,13 +14,11 @@ const ViewExercise = (exerciseid) => {
             const response = await fetch('https://wger.de/api/v2/exerciseinfo/' +
                 id + '/?format=json');
             const json = await response.json();
-            console.log('set results')
             setResults(json);
-            console.log(results)
+
         }
         catch (error) {
             console.log(error);
-            setImageuris([]);
 
         }
     }
@@ -35,7 +33,7 @@ const ViewExercise = (exerciseid) => {
         getExerciseData(exerciseid);
     }, [])
 
-    return (
+    return (results.id ?
         <ScrollView>
             <View>
                 <View style={styles.titleContainer}>
@@ -74,6 +72,8 @@ const ViewExercise = (exerciseid) => {
 
             </View >
         </ScrollView>
+        : <Text>Loading..</Text>
+
     );
 
 };
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     imgContainer: {
         marginTop: 10,
         height: 400,
-        width: '100%',
+        width: 'auto',
         flexDirection: 'row',
         padding: 5,
 

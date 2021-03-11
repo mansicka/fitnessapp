@@ -1,38 +1,119 @@
 import React from 'react';
-import { StyleSheet, TextInput, Button, Text, Alert, Container } from 'react-native';
-import { Col, Row, Grid } from 'react-native-easy-grid';
+import { StyleSheet, Text, Container, View, TouchableOpacity } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-const Main = () => {
-
+const Stack = createStackNavigator();
+const Main = ({ navigation }) => {
     return (
-        <Grid>
-            <Row size={25}>
 
-            </Row>
-            <Row size={50}>
-                <Text>Ilari</Text>
-            </Row>
-            <Row size={25}></Row>
+        <View style={styles.mainContainer}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>
+                    wger.de Fitness App
+          </Text>
+            </View>
+            <View style={styles.divider} />
 
-        </Grid>
+            <View style={styles.linkContainer}>
+                <TouchableOpacity onPress={() =>
+                    navigation.navigate('Categories')
+                } >
+                    <Text style={styles.subTitle}>
+                        Exercise categories
+          </Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.linkContainer}>
+                <Text style={styles.subTitle}>
+                    Exercises by muscle
+          </Text>
+            </View>
+            <View style={styles.linkContainer}>
+                <Text style={styles.subTitle}>
+                    Search exercises
+          </Text>
+            </View>
+            <View style={styles.linkContainer}>
+                <Text style={styles.subTitle}>
+                    Saved favorites
+          </Text>
+            </View>
+        </View>
 
+    );
 
-
-
-    )
 }
-export default Main;
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        flex: 1,
-        width: null,
-        height: null,
+    mainContainer: {
+        height: '80%',
+        width: '100%',
+        flexDirection: 'column',
+        padding: 5,
+    },
+    imgContainer: {
+        marginTop: 10,
+        height: 400,
+        width: 'auto',
+        flexDirection: 'row',
+        padding: 5,
 
     },
-    buttonText: {
+    linkContainer: {
+        marginTop: 40,
+        marginBottom: 40,
+        height: 'auto',
+        width: '100%',
+        flexDirection: 'column',
+        padding: 10,
+    },
+    titleContainer: {
+        marginTop: 40,
+        marginBottom: 10,
+        height: 70,
+        width: '100%',
+        flexDirection: 'row',
+        padding: 5,
+        alignItems: 'center',
 
+    },
+    image: {
+        height: '100%',
+        flex: 0.35
 
+    },
+    subtContainer: {
+        marginTop: 20,
+        marginBottom: 5,
+        height: 'auto',
+        width: '100%',
+        flexDirection: 'column',
+        padding: 5,
+    },
+    divider: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        width: '50%',
+    },
+    content: {
+        flex: 0.65,
+        paddingHorizontal: 5,
+    },
+    title: {
+        fontSize: 34,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center'
+    },
+    subTitle: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center'
+    },
+    noteTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     input: {
         borderColor: 'grey',
@@ -54,3 +135,4 @@ const styles = StyleSheet.create({
     },
 
 })
+export default Main;

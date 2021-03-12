@@ -2,8 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Button, Text, Alert, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import ImageLoad from 'react-native-image-placeholder';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Category from '../components/category'
 
-const Categories = () => {
+const Stack = createStackNavigator();
+const Categories = ({ navigation }) => {
     const [categories, setCategories] = useState([]);
 
     const getCategories = async () => {
@@ -25,31 +29,43 @@ const Categories = () => {
     }, [])
 
     return (categories.count ?
+
+
+
         <ScrollView>
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>Exercise categories</Text>
             </View>
             <View style={styles.divider} />
-            {categories.results.map((category, i) => {
+            {categories.results.map((cat, i) => {
                 return (
-                    <TouchableOpacity key={i} onPress={() => {
-                        console.log('Press');
-                    }} >
-                        <View style={styles.categoryContainer}>
-                            <Text style={styles.subTitle}>{category.name}</Text>
+                    <TouchableOpacity key={i} onPress={() => navigation.navigate('Exercises in category', { screen: "Exercises in category", params: cat.id })}>
+                        < View style={styles.catContainer} >
+                            <Text style={styles.subTitle}>{cat.name}</Text>
                         </View>
 
-                    </TouchableOpacity>
+                    </TouchableOpacity >
                 )
             })}
 
-        </ScrollView>
-
+        </ScrollView >
         : <Text>Loading...</Text>
+
     );
 };
 
-
+const NavigatorTheme = {
+    dark: false,
+    transparentCard: true,
+    colors: {
+        primary: 'rgb(255, 255, 255)',
+        background: 'rgb(255, 255, 255)',
+        card: 'rgb(255, 255, 255)',
+        text: 'rgb(28, 28, 30)',
+        border: 'rgb(255, 255, 255)',
+        notification: 'rgb(255, 69, 58)',
+    },
+};
 const styles = StyleSheet.create({
     cardContainer: {
         marginTop: 40,
@@ -66,7 +82,7 @@ const styles = StyleSheet.create({
         padding: 5,
 
     },
-    categoryContainer: {
+    catContainer: {
         marginTop: 10,
         height: 40,
         width: '100%',
@@ -85,7 +101,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     titleContainer: {
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 10,
         height: 60,
         width: '100%',

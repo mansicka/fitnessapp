@@ -11,7 +11,7 @@ import Categories from './components/categories'
 import Category from './components/category'
 import Muscles from './components/muscles'
 import Muscle from './components/muscle'
-
+import Favorites from './components/favorites'
 const Stack = createStackNavigator();
 export default function App() {
 
@@ -23,6 +23,11 @@ export default function App() {
         <Stack.Screen name="Categories" component={Categories} />
         <Stack.Screen name="Muscles" component={Muscles} />
         <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name='View exercise' component={ViewExercise} />
+        <Stack.Screen name='Exercises in category' component={Category} />
+        <Stack.Screen name='Exercises by muscle' component={Muscle} />
+        <Stack.Screen name='Favorites' component={Favorites} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -38,12 +43,13 @@ const styles = StyleSheet.create({
 });
 const NavigatorTheme = {
   dark: false,
+  transparentCard: true,
   colors: {
-    primary: 'rgb(255, 45, 85)',
+    primary: 'rgb(255, 255, 255)',
     background: 'rgb(255, 255, 255)',
     card: 'rgb(255, 255, 255)',
     text: 'rgb(28, 28, 30)',
-    border: 'rgb(199, 199, 204)',
+    border: 'rgb(255, 255, 255)',
     notification: 'rgb(255, 69, 58)',
   },
 };

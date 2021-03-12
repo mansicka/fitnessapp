@@ -2,25 +2,52 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Button, Text, Alert, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import ImageLoad from 'react-native-image-placeholder';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import * as SQLite from 'expo-sqlite';
+import DeleteFavorite from './../components/util/deleteFavorite'
+import AddFavorite from './../components/util/addFavorite'
+import { set } from 'react-native-reanimated';
 
-const ViewExercise = (exerciseid) => {
 
+
+const Stack = createStackNavigator();
+const ViewExercise = ({ route, navigation }) => {
+
+    const db = SQLite.openDatabase('favorites.db');
+    const id = route.params.params;
     const [results, setResults] = useState([]);
+    const [favorites, setFavorites] = useState([]);
+    const [exerciseId, setExerciseId] = useState('');
+    const [category, setCategory] = useState('');
+    const [name, setName] = useState('');
+
+    const updateFavorites = () => {
+        db.transaction(tx => {
+            tx.executeSql('select* from favorite;', [], (_, { rows }) => setFavorites(rows._array));
+        });
+    }
+
 
     //get exerciseinfo from wger
     const getExerciseData = async () => {
-        let id = exerciseid.exerciseid.toString()
         try {
             const response = await fetch('https://wger.de/api/v2/exerciseinfo/' +
                 id + '/?format=json');
             const json = await response.json();
             setResults(json);
+            setExerciseId(results.id)
+            setCategory(results.category)
+            setName(results.name)
+
 
         }
         catch (error) {
             console.log(error);
 
         }
+
+
     }
     //a function to clean up description string of html
     const cleanString = (string) => {
@@ -29,8 +56,31 @@ const ViewExercise = (exerciseid) => {
         return (result)
     }
 
+    const saveItem = () => {
+
+        db.transaction(tx => {
+            tx.executeSql('INSERT INTO favorite (exerciseid, title, category, image_url) VALUES (?,?,?,?)',
+                [exerciseId, name, category, '']);
+        }, null, updateFavorites)
+        console.log('added item')
+        console.log(favorites)
+    }
+
+    const deleteItem = (id) => {
+        db.transaction(tx => { tx.executeSql('DELETE FROM favorite WHERE exerciseid = ?', [id]); }, null, updateFavorites)
+        console.log('deleted item')
+        console.log(favorites)
+
+    }
+
     useEffect(() => {
-        getExerciseData(exerciseid);
+        getExerciseData(route.params);
+        db.transaction(tx => {
+            tx.executeSql('create table if not exists favorite(id integer not null auto_increment, exerciseid int, title text, category text, primary key (id));');
+        }, null
+        );
+        updateFavorites();
+
     }, [])
 
     return (results.id ?
@@ -40,18 +90,50 @@ const ViewExercise = (exerciseid) => {
                     <Text style={styles.title}>{results.name}</Text>
                 </View>
                 <View style={styles.divider} />
+                {favorites.some(e => e.name === results.name) ?
 
+                    <View>
+
+                        <TouchableOpacity onPress={() => deleteItem(results.id)}>
+                            <View style={styles.deleteContainer}>
+                                <Text style={styles.deleteButtonText}>DELETE FROM FAVORITES</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+                    : <View>
+
+                        <TouchableOpacity onPress={() => saveItem()}>
+                            <View style={styles.deleteContainer}>
+                                <Text style={styles.addButtonText}>ADD TO FAVORITES</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+                }
                 <View style={styles.subtContainer}><Text style={styles.subTitle}>Category</Text>
                     <Text>&#9679; {results.category.name}</Text>
                 </View>
                 <View style={styles.textContainer}>
-                    <Text>&#9679;Affected muscle: {results.muscles[0].name}</Text></View>
+                    <Text>&#9679;Affected muscle(s): </Text>
+                    {
+                        results.muscles.map((muscle, i) => {
+                            return (
+                                <Text key={i}>{muscle.name}</Text>
+                            )
+                        })}
+                </View>
                 <View style={styles.subtContainer}>
                     <Text style={styles.subTitle}>Description:</Text></View>
                 <View style={styles.textContainer}>
                     <Text>{cleanString(results.description)}</Text>
+
                     <Text style={styles.noteTitle}>Notes: </Text>
-                    <Text>{results.comments[0].comment}</Text>
+                    {results.comments.map((comment, i) => {
+                        return (
+                            <Text key={i}>{comment.comment}</Text>
+                        )
+                    })}
                 </View>
                 <View style={styles.subtContainer}>
                     <Text style={styles.subTitle}>Images</Text></View>
@@ -72,12 +154,33 @@ const ViewExercise = (exerciseid) => {
 
             </View >
         </ScrollView>
-        : <Text>Loading..</Text>
+        : <Text>Loading...</Text>
 
     );
 
 };
 const styles = StyleSheet.create({
+    deleteButtonText: {
+        color: 'red',
+        textAlign: 'right',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    addButtonText: {
+        color: 'green',
+        textAlign: 'left',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    deleteContainer: {
+        marginTop: 10,
+        marginBottom: 10,
+        height: 55,
+        width: '100%',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
     cardContainer: {
         marginTop: 40,
         height: 100,
@@ -101,9 +204,9 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     titleContainer: {
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 10,
-        height: 55,
+        height: 'auto',
         width: '100%',
         flexDirection: 'row',
         padding: 5,

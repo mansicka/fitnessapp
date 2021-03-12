@@ -25,19 +25,31 @@ const Main = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <View style={styles.linkContainer}>
-                <Text style={styles.subTitle}>
-                    Exercises by muscle
+                <TouchableOpacity onPress={() =>
+                    navigation.navigate('Muscles')
+                } >
+                    <Text style={styles.subTitle}>
+                        Exercises by muscle
           </Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.linkContainer}>
-                <Text style={styles.subTitle}>
-                    Search exercises
+                <TouchableOpacity onPress={() =>
+                    navigation.navigate('Search')
+                } >
+                    <Text style={styles.subTitle}>
+                        Search exercises
           </Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.linkContainer}>
-                <Text style={styles.subTitle}>
-                    Saved favorites
+                <TouchableOpacity onPress={() =>
+                    navigation.navigate('Favorites')
+                } >
+                    <Text style={styles.subTitle}>
+                        Saved favorites
           </Text>
+                </TouchableOpacity>
             </View>
         </View>
 

@@ -2,10 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Button, Text, Alert, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import ImageLoad from 'react-native-image-placeholder';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 const url = 'https://wger.de/api/v2/exercise/search/?format=json&term=';
 
-const Search = () => {
+const Search = ({ navigation }) => {
     const [results, setResults] = useState([]);
     const [searchterm, setSearchterm] = useState('');
 
@@ -56,16 +60,14 @@ const Search = () => {
             {/* map exercise data if array is not empty */}
             <ScrollView >
                 {results.map((exerciseDetail, i) => {
+                    console.log(exerciseDetail)
                     return (
-                        <TouchableOpacity key={i} onPress={() => {
-                            console.log('Press');
-                        }
-                        } >
+                        <TouchableOpacity key={i} onPress={() => navigation.navigate('View exercise', { screen: "View exercise", params: exerciseDetail.data.id })}>
                             <View style={styles.cardContainer} key={i} >
                                 <ImageLoad key={i} source={{ uri: 'https://wger.de/' + exerciseDetail.data.image }} style={styles.image}
                                     placeholderSource={require('../img/no_image.jpg')} />
                                 <View style={styles.content}>
-                                    <Text style={styles.title}>{exerciseDetail.data.name}</Text>
+                                    <Text style={styles.eTitle}>{exerciseDetail.data.name}</Text>
                                     <Text>
                                         Category: {exerciseDetail.data.category}
                                     </Text>
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
     },
     imgContainer: {
         marginTop: 10,
-        height: 400,
+        height: 'auto',
         width: 'auto',
         flexDirection: 'row',
         padding: 5,
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     titleContainer: {
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 10,
         height: 55,
         width: '100%',
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
 
     },
     buttonView: {
-        margintop: 10,
+        margintop: 5,
         marginBottom: 5,
         heigth: 5,
         alignItems: 'center',
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
         width: '50%',
     },
     content: {
-        flex: 0.65,
+        flex: 1,
         paddingHorizontal: 5,
     },
     title: {
@@ -150,18 +152,26 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         textAlign: 'center'
     },
-    subTitle: {
+    eTitle: {
         fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'center'
+    },
+    subTitle: {
+        fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 5,
         textAlign: 'left'
     },
     buttonText: {
-        fontSize: 22,
+        fontSize: 26,
         fontWeight: 'bold',
-        marginBottom: 5,
-        marginTop: 5,
-        backgroundColor: '#D1D1D1'
+        width: 160,
+        height: 38,
+        marginTop: 10,
+        backgroundColor: '#D1D1D1',
+        textAlign: 'center'
     },
 
     noteTitle: {

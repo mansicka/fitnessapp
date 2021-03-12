@@ -4,9 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Button, Text, Alert, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import ImageLoad from 'react-native-image-placeholder';
 import GetImagesById from './util/getImages'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-const Muscle = (muscleid) => {
-    const id = muscleid.muscleid.toString()
+const Stack = createStackNavigator();
+
+const Muscle = ({ route, navigation }) => {
+    const id = route.params.params;
     const url = 'https://wger.de/api/v2/exercise/?format=json&language=2&muscles=';
     const [exercises, setExercises] = useState([])
 
@@ -29,7 +33,7 @@ const Muscle = (muscleid) => {
 
     useEffect(() => {
         console.log('muscle.js- load exercises')
-        getExercisesByMuscleGroup(muscleid);
+        getExercisesByMuscleGroup(route.params);
     }, [])
     return (
         <ScrollView>
@@ -41,13 +45,8 @@ const Muscle = (muscleid) => {
 
                 exercises.map((exercise, i) => {
 
-
                     return (
-                        <TouchableOpacity key={i} onPress={() => {
-                            console.log('Press');
-
-                        }
-                        } >
+                        <TouchableOpacity key={i} onPress={() => navigation.navigate('View exercise', { screen: "View exercise", params: exercise.id })}>
                             <View style={styles.cardContainer} key={i} >
                                 {/* <GetImagesById id={exercise.id} /> */}
                                 <View style={styles.content}>
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     titleContainer: {
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 10,
         height: 55,
         width: '100%',

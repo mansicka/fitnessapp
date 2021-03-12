@@ -2,8 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Button, Text, Alert, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import ImageLoad from 'react-native-image-placeholder';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-const Muscles = () => {
+const Stack = createStackNavigator();
+const Muscles = ({ route, navigation }) => {
     const [muscles, setMuscles] = useState([]);
     const imgurl = 'https://wger.de'
     const getMuscles = async () => {
@@ -30,12 +33,10 @@ const Muscles = () => {
             </View>
             <View style={styles.divider} />
             {muscles.results.map((muscle, i) => {
-                var url = imgurl + muscle.image_url_main
-
+                var url = imgurl + muscle.image_url_main;
+                var title = 'Exercises for ' + muscle.name;
                 return (
-                    <TouchableOpacity key={i} onPress={() => {
-                        console.log('Press');
-                    }} >
+                    <TouchableOpacity key={i} onPress={() => navigation.navigate('Exercises by muscle', { screen: title, params: muscle.id })}>
                         <View style={styles.categoryContainer}>
                             <Image source={{ uri: url }} />
                             <Text style={styles.subTitle}>{muscle.name}</Text>
@@ -80,14 +81,14 @@ const styles = StyleSheet.create({
 
     },
     textContainer: {
-        marginTop: 1,
+        marginTop: 10,
         height: 'auto',
         width: '100%',
         flexDirection: 'column',
         padding: 10,
     },
     titleContainer: {
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 10,
         height: 60,
         width: '100%',

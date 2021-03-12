@@ -5,9 +5,6 @@ import ImageLoad from 'react-native-image-placeholder';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as SQLite from 'expo-sqlite';
-import DeleteFavorite from './../components/util/deleteFavorite'
-import AddFavorite from './../components/util/addFavorite'
-import { set } from 'react-native-reanimated';
 
 
 

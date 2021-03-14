@@ -3,6 +3,7 @@ import * as SQLite from 'expo-sqlite';
 import React, { useState, useEffect } from 'react';
 
 const Favorites = ({ route, navigation }) => {
+
     const db = SQLite.openDatabase('favorites.db');
     const [favorites, setFavorites] = useState([]);
 
@@ -11,6 +12,12 @@ const Favorites = ({ route, navigation }) => {
             tx.executeSql('select* from favorite;', [], (_, { rows }) => setFavorites(rows._array));
         });
         console.log(favorites)
+    }
+    const deleteAll = () => {
+        db.transaction(tx => { tx.executeSql('DELETE FROM favorite ', []); }, null, updateFavorites)
+        console.log('deleted all')
+        console.log(favorites)
+
     }
 
     const deleteItem = (id) => {
@@ -63,10 +70,18 @@ const Favorites = ({ route, navigation }) => {
                     })
                     }
                 </View>
+                <View style={styles.deleteContainer}>
+                    <TouchableOpacity onPress={() => { deleteAll() }}>
+                        <Text style={styles.deleteButtonText}>
+                            REMOVE ALL FAVORITES
+                                        </Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
 
             : <View style={styles.titleContainer}>
                 <Text style={styles.eitle}>No favorites added. Add some!</Text>
+
             </View>
     );
 

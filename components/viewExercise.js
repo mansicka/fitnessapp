@@ -11,7 +11,9 @@ import * as SQLite from 'expo-sqlite';
 const Stack = createStackNavigator();
 const ViewExercise = ({ route, navigation }) => {
 
+
     const db = SQLite.openDatabase('favorites.db');
+
     const id = route.params.params;
     const [results, setResults] = useState([]);
     const [favorites, setFavorites] = useState([]);
@@ -33,11 +35,6 @@ const ViewExercise = ({ route, navigation }) => {
                 id + '/?format=json');
             const json = await response.json();
             setResults(json);
-            setExerciseId(results.id)
-            setCategory(results.category)
-            setName(results.name)
-
-
         }
         catch (error) {
             console.log(error);
@@ -54,13 +51,12 @@ const ViewExercise = ({ route, navigation }) => {
     }
 
     const saveItem = () => {
-
         db.transaction(tx => {
-            tx.executeSql('INSERT INTO favorite (exerciseid, title, category, image_url) VALUES (?,?,?,?)',
+
+            tx.executeSql('INSERT INTO favorite (exerciseid, title, category, image_url) VALUES (?,?,?,?);',
                 [exerciseId, name, category, '']);
         }, null, updateFavorites)
         console.log('added item')
-        console.log(favorites)
     }
 
     const deleteItem = (id) => {
@@ -74,9 +70,9 @@ const ViewExercise = ({ route, navigation }) => {
         getExerciseData(route.params);
         db.transaction(tx => {
             tx.executeSql('create table if not exists favorite(id integer not null auto_increment, exerciseid int, title text, category text, primary key (id));');
-        }, null
+        }, null, updateFavorites()
         );
-        updateFavorites();
+
 
     }, [])
 

@@ -15,3 +15,4 @@ A mobile app project to browse, search and display exercise data fromw [Wger.de 
 * react-native
 * [react-native-image-placeholder](https://www.npmjs.com/package/react-native-image-placeholder)
 * [react-navigation](https://www.npmjs.com/package/react-navigation)
+* [expo-sqlite](https://www.npmjs.com/package/expo-sqlite)

@@ -17,9 +17,6 @@ const ViewExercise = ({ route, navigation }) => {
     const id = route.params.params;
     const [results, setResults] = useState([]);
     const [favorites, setFavorites] = useState([]);
-    const [exerciseId, setExerciseId] = useState('');
-    const [category, setCategory] = useState('');
-    const [name, setName] = useState('');
 
     const updateFavorites = () => {
         db.transaction(tx => {
@@ -53,9 +50,9 @@ const ViewExercise = ({ route, navigation }) => {
     const saveItem = () => {
         db.transaction(tx => {
 
-            tx.executeSql('INSERT INTO favorite (exerciseid, title, category, image_url) VALUES (?,?,?,?);',
-                [exerciseId, name, category, '']);
-        }, null, updateFavorites)
+            tx.executeSql('INSERT INTO favorite (exerciseid, title, category) VALUES (?,?,?);',
+                [results.id, results.name, results.category.name]);
+        }, (error => console.log(error)), updateFavorites)
         console.log('added item')
     }
 
@@ -69,7 +66,7 @@ const ViewExercise = ({ route, navigation }) => {
     useEffect(() => {
         getExerciseData(route.params);
         db.transaction(tx => {
-            tx.executeSql('create table if not exists favorite(id integer not null auto_increment, exerciseid int, title text, category text, primary key (id));');
+            tx.executeSql('create table if not exists favorite(exerciseid int, title text, category text, primary key (exerciseid));');
         }, null, updateFavorites()
         );
 
@@ -83,7 +80,7 @@ const ViewExercise = ({ route, navigation }) => {
                     <Text style={styles.title}>{results.name}</Text>
                 </View>
                 <View style={styles.divider} />
-                {favorites.some(e => e.name === results.name) ?
+                {favorites.some(e => e.title === results.name) ?
 
                     <View>
 

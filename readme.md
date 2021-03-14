@@ -4,12 +4,11 @@ A mobile app project to browse, search and display exercise data fromw [Wger.de 
 * Features:
     * Search function
     * Browse exercises by affected muscle and exercise category
-    * Favorite exercise saving (implemented, not yet working)
+    * Favorite exercise saving 
 
 * To do:
     * More appealing UI
     * Utilization of full spectrum of the API
-    * Working database integration
 
 ## Dependencies
 * react-native

@@ -21,11 +21,12 @@ const Favorites = ({ route, navigation }) => {
     }
 
     const deleteItem = (id) => {
+        console.log(id)
         db.transaction(tx => { tx.executeSql(`delete from favorite where id = ?;`, [id]); }, null, updateFavorites)
     }
 
     useEffect(() => {
-        db.transaction(tx => { tx.executeSql('create table if not exists favorite(id integer not null auto_increment, exerciseid int, title text, category text, primary key (id));'); }, null,
+        db.transaction(tx => { tx.executeSql('create table if not exists favorite(exerciseid int, title text, category text, primary key (exerciseid));'); }, null,
             updateFavorites);
         console.log(favorites)
     }, []);
@@ -45,7 +46,7 @@ const Favorites = ({ route, navigation }) => {
                             <View style={styles.cardContainer} key={i} >
                                 <TouchableOpacity key={i} onPress={() => navigation.navigate('View exercise', { screen: "View exercise", params: favorite.exerciseid })}>
                                     <View style={styles.content}>
-                                        <Text style={styles.eTitle}>{favorite.name}</Text>
+                                        <Text style={styles.subTitle}>{favorite.title}</Text>
                                         <Text>
                                             Category: {favorite.category}
                                         </Text>
@@ -54,7 +55,7 @@ const Favorites = ({ route, navigation }) => {
 
                                 {/* Delete from favorites button */}
                                 <View style={styles.deleteContainer}>
-                                    <TouchableOpacity onPress={() => { deleteItem(favorite.id) }}>
+                                    <TouchableOpacity onPress={() => { deleteItem(favorite.exerciseid) }}>
                                         <Text style={styles.deleteButtonText}>
                                             REMOVE
                                         </Text>
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontSize: 18,
         fontWeight: 'bold',
+        flexDirection: 'column',
     },
     deleteContainer: {
         marginTop: 10,
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
         width: '100%',
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-end',
     },
     image: {
         height: '100%',

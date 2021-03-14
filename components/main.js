@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 const Main = ({ navigation }) => {
     return (
-
         <View style={styles.mainContainer}>
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>
@@ -52,7 +51,6 @@ const Main = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
         </View>
-
     );
 
 }
@@ -62,6 +60,10 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'column',
         padding: 5,
+    },
+    bgImage: {
+        flex: 1,
+        resizeMode: "cover",
     },
     imgContainer: {
         marginTop: 10,

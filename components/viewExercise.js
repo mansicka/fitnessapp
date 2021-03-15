@@ -48,10 +48,17 @@ const ViewExercise = ({ route, navigation }) => {
     }
 
     const saveItem = () => {
+        var img = ''
+        if (results.images.length == 0) {
+            img = '../img/no_image.jpg'
+        }
+        else {
+            img = results.images[0].image.toString()
+        }
         db.transaction(tx => {
 
-            tx.executeSql('INSERT INTO favorite (exerciseid, title, category) VALUES (?,?,?);',
-                [results.id, results.name, results.category.name]);
+            tx.executeSql('INSERT INTO favorite (exerciseid, title, imageurl, category) VALUES (?,?,?,?);',
+                [results.id, results.name, img, results.category.name]);
         }, (error => console.log(error)), updateFavorites)
         console.log('added item')
     }
@@ -66,7 +73,7 @@ const ViewExercise = ({ route, navigation }) => {
     useEffect(() => {
         getExerciseData(route.params);
         db.transaction(tx => {
-            tx.executeSql('create table if not exists favorite(exerciseid int, title text, category text, primary key (exerciseid));');
+            tx.executeSql('create table if not exists favorite(exerciseid int, title text, category text, imageurl text, primary key (exerciseid));');
         }, null, updateFavorites()
         );
 

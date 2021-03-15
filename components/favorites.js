@@ -1,5 +1,6 @@
 import { StyleSheet, TextInput, Button, Text, Alert, Image, View, ScrollView, TouchableOpacity } from 'react-native';
 import * as SQLite from 'expo-sqlite';
+
 import React, { useState, useEffect } from 'react';
 
 const Favorites = ({ route, navigation }) => {
@@ -26,7 +27,7 @@ const Favorites = ({ route, navigation }) => {
     }
 
     useEffect(() => {
-        db.transaction(tx => { tx.executeSql('create table if not exists favorite(exerciseid int, title text, category text, primary key (exerciseid));'); }, null,
+        db.transaction(tx => { tx.executeSql('create table if not exists favorite(exerciseid int, title text, category text, imageurl text, primary key (exerciseid));'); }, null,
             updateFavorites);
         console.log(favorites)
     }, []);
